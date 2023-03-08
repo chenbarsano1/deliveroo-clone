@@ -1,14 +1,19 @@
 import { View, Text, SafeAreaView, Image, TextInput, ScrollView } from 'react-native'
-import React, { useLayoutEffect } from 'react'
+import React, { useEffect, useLayoutEffect, useState } from 'react'
 import { useNavigation } from '@react-navigation/native'
 import { Entypo, FontAwesome, AntDesign, SimpleLineIcons } from '@expo/vector-icons';
 import Categories from '../components/Categories';
 import FeaturedRow from '../components/FeaturedRow';
+// import { sanityClient } from '../sanity';
+// import { SanityClient } from 'sanity';
+import sanityClient from '../sanity';
+import 'url-search-params-polyfill';
 
 
 const HomeScreen = () => {
     
     const navigation = useNavigation();
+    const [featuredCategories, setFeaturedCategories] = useState([]);
 
     // as soon as the screen mounts, do -
     useLayoutEffect(() => {
@@ -16,6 +21,22 @@ const HomeScreen = () => {
             headerShown: false,
         });
     }, []);
+
+    useEffect(() => {
+        sanityClient.fetch(`
+        *[_type == "featured"] {
+            ...,
+            restaurants[] -> {
+              ...,
+              dishes[] ->
+            }
+          }
+        `).then(data => {
+            setFeaturedCategories(data)
+        });
+    }, []);
+
+    console.log(featuredCategories);
 
     return (
         <SafeAreaView className="bg-white pt-5">
@@ -64,7 +85,17 @@ const HomeScreen = () => {
                 <Categories/>
 
                 {/* Featured rows */}
-                <FeaturedRow
+
+                {featuredCategories?.map((category) => (
+                    <FeaturedRow
+                    key={category._id}
+                    id={category._id}
+                    title={category.name}
+                    description={category.short_description}
+                />
+                ))}
+
+                {/* <FeaturedRow
                     id="123"
                     title="Featured"
                     description="Paid placements from our partners"
@@ -84,7 +115,7 @@ const HomeScreen = () => {
                     description="Why not support your local restaurant tonight?"
                     featuredCategory="offers"
                 
-                />
+                /> */}
             </ScrollView>
         </SafeAreaView>
     )

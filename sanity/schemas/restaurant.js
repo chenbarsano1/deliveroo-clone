@@ -6,7 +6,7 @@ export default defineType({
   type: 'document',
   fields: [
     defineField({
-      name: 'title',
+      name: 'name',
       title: 'Restaurant name',
       type: 'string',
       validation: (Rule) => Rule.required(),
@@ -22,16 +22,16 @@ export default defineType({
       title: 'Image of the Restaurant',
       type: 'image',
     }),
-    defineField({
-      name: 'lat',
-      title: 'Latitude of the Restaurant',
-      type: 'number',
-    }),
-    defineField({
-      name: 'long',
-      title: 'Longitude of the Restaurant',
-      type: 'number',
-    }),
+    // defineField({
+    //   name: 'lat',
+    //   title: 'Latitude of the Restaurant',
+    //   type: 'number',
+    // }),
+    // defineField({
+    //   name: 'long',
+    //   title: 'Longitude of the Restaurant',
+    //   type: 'number',
+    // }),
     defineField({
       name: 'address',
       title: 'Restaurant address',
@@ -40,13 +40,13 @@ export default defineType({
     }),
     defineField({
       name: 'rating',
-      title: 'Enter a Rating from (1-5 Stars)',
+      title: 'Enter a Rating from (1-10 Stars)',
       type: 'number',
       validation: (Rule) =>
        Rule.required()
        .min(1)
-       .max(5)
-       .error("Please enter a value between 1 and 5")
+       .max(10)
+       .error("Please enter a value between 1 and 10")
     }),
     defineField({
       name: 'type',
